@@ -1,23 +1,19 @@
-import React from 'react'
+import { Auth, ThemeSupa } from '@supabase/auth-ui-react'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+import Account from '../components/accounts'
 
-function Home() {
+const Home = () => {
+  const session = useSession()
+  const supabase = useSupabaseClient()
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl font-medium">Welcome to ProjPeers</h1>
-      <p className="text-lg font-light mb-4">Connect with like-minded individuals to collaborate on projects.</p>
-      <button className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg">
-        <a href="/login" className="no-underline text-white">Join Now</a>
-      </button>
-    <br/>
-      <button className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg">
-        <a href="/profile" className="no-underline text-white">Profile page.. this should come as a part of signing up </a>
-      </button>
-
-    <br/>
-    <button className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg">
-      <a href="/test" className="no-underline text-white">Language rating page which is essentially a modification of our profile page </a>
-    </button>
-  </div>
+    <div className="container" style={{ padding: '50px 0 100px 0' }}>
+      {!session ? (
+        <Auth providers={["google","github","linkedin"]} supabaseClient={supabase} appearance={{ theme: ThemeSupa }} theme="dark" />
+      ) : (
+        <Account session={session} />
+      )}
+    </div>
   )
 }
 
