@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react'
+import { useState, useEffect, use } from 'react'
+import { useUser, useSupabaseClient, useSession } from '@supabase/auth-helpers-react'
 
 export default function Account({ session }) {
   const supabase = useSupabaseClient()
@@ -9,7 +9,9 @@ export default function Account({ session }) {
   const [website, setWebsite] = useState(null)
   const [avatar_url, setAvatarUrl] = useState(null)
   const [profile, setProfile] = useState({});
-
+  const [pull_requests, SetPull_requests] = useState(null);
+  const [MyLanguages, SetMyLanguages] = useState({});
+  
   useEffect(() => {
     async function fetchData() {
       const userResponse = await fetch(`https://api.github.com/users/${username}`);
@@ -24,7 +26,10 @@ export default function Account({ session }) {
         pull_requests += repo.pull_requests;
         issues += repo.open_issues;
       });
-      
+
+      SetPull_requests(pull_requests);
+      SetMyLanguages(languages);
+
       setProfile({
         ...userData,
         languages: [...languages],
@@ -47,7 +52,7 @@ export default function Account({ session }) {
 
       let { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select(`username, website, avatar_url, pull_requests, languages`)
         .eq('id', user.id)
         .single()
 
@@ -59,6 +64,7 @@ export default function Account({ session }) {
         setUsername(data.username)
         setWebsite(data.website)
         setAvatarUrl(data.avatar_url)
+        
       }
     } catch (error) {
       alert('Error loading user data!')
@@ -68,7 +74,7 @@ export default function Account({ session }) {
     }
   }
 
-  async function updateProfile({ username, website, avatar_url }) {
+  async function updateProfile({ username, website, avatar_url, pull_requests, languages }) {
     try {
       setLoading(true)
 
@@ -77,6 +83,8 @@ export default function Account({ session }) {
         username,
         website,
         avatar_url,
+        pull_requests,
+        languages,
         updated_at: new Date().toISOString(),
       }
 
@@ -122,7 +130,7 @@ export default function Account({ session }) {
       <div>
         <button
           className="button primary block"
-          onClick={() => updateProfile({ username, website, avatar_url })}
+          onClick={() => updateProfile({ username, website, avatar_url, pull_requests, MyLanguages })}
           disabled={loading}
         >
           {loading ? 'Loading ...' : 'Update'}
