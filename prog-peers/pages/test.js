@@ -53,7 +53,7 @@ function LanguageProfile() {
       {rating !== 0 && (
         <div>
             <p className="text-2xl font-bold">Language Rating: {rating}</p>
-            <br/>   
+            <br/>
           <h2 className="text-lg font-bold">Most used languages:</h2>
           <ul className="list-disc pl-5">
                 {languages.map(lang => (

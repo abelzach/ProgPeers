@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 
 export default function SignUp() {
-    const [username, setUsername] = useState('');
-    const [repos, setRepos] = useState([]);
-
-    async function fetchRepos() {
-        const response = await fetch(`https://api.github.com/users/${username}/repos`);
-        const data = await response.json();
-        console.log(data);
-        setRepos(data);
-    }
 
     return (
         <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
@@ -38,8 +29,6 @@ export default function SignUp() {
                             GitHub Username
                         </label>
                         <input
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
                             className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
                         />
                     </div>
@@ -57,20 +46,13 @@ export default function SignUp() {
                     </div>
                    
                     <div className="mt-6">
-                        <button onClick={fetchRepos} className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
+                        <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
                             Sign Up
                         </button>
                     </div>
                 </form>
                 
-                <h4 style={{ color: 'black' }}>Repositories</h4>
-                <ul style={{ color: 'black' }}>
-                    {repos.map(repo => (
-                    <li key={repo.id}>
-                        <a href={repo.html_url}>{repo.name}</a>
-                    </li>
-                    ))}
-                </ul>
+               
             </div>
             
         </div>
